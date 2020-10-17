@@ -13,4 +13,5 @@ router.register("reservation", ReservationViewset)
 
 urlpatterns = [
 	path("", include(router.urls)),
+	path("login/", CustomAuthToken.as_view()),
 ]
