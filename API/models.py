@@ -23,8 +23,8 @@ class Aeroport(models.Model):
 		return f"{self.nom} - {self.ville}"
 
 class Vol(models.Model):
-	depart = models.DateTimeField(default=timezone.now)
-	arrivee = models.DateTimeField(default=timezone.now)
+	depart = models.DateTimeField()
+	arrivee = models.DateTimeField()
 	avion = models.ForeignKey("Avion", on_delete=models.PROTECT)
 	source = models.ForeignKey("Aeroport", related_name='source', on_delete=models.PROTECT)
 	destination = models.ForeignKey("Aeroport", related_name='destination', on_delete=models.PROTECT)
@@ -37,4 +37,4 @@ class Reservation(models.Model):
 	vol = models.ForeignKey(Vol, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return f"{self.user.firstname} {self.vol}"
+		return f"{self.user.first_name} {self.vol}"

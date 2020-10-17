@@ -51,10 +51,10 @@ class ReservationSerializer(serializers.ModelSerializer):
 		return obj.user.last_name
 
 	def get_depart(self, obj):
-		return f"{obj.vol.depart}"
+		return obj.vol.depart
 		
 	def get_arrivee(self, obj):
-		return f"{obj.vol.arrivee}"
+		return obj.vol.arrivee
 
 	def to_representation(self, obj):
 		representation = super().to_representation(obj)
