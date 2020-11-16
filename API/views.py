@@ -4,6 +4,8 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 from .serializers import *
 from .models import *
@@ -46,12 +48,12 @@ class ReservationViewset(viewsets.ModelViewSet):
 
 class CustomAuthToken(ObtainAuthToken):
 	def post(self, request, *args, **kwargs):
-		serializer = self.serializer_class(data=request.data, context={'request': request})
-		serializer.is_valid(raise_exception=True)
-		user = serializer.validated_data['user']
-		token, created = Token.objects.get_or_create(user=user)
-		group = "" if not user.groups.all() else user.groups.all()[0].name
-		return Response({
-			'token': token.key,
-			'group': group
-		})
+		user = authenticate(**request.data)
+		if(user is not None):
+			token, created = Token.objects.get_or_create(user=user)
+			group = "" if not user.groups.all() else user.groups.all()[0].name
+			return Response({
+				'token': token.key,
+				'group': group
+			})
+		return Response({})
