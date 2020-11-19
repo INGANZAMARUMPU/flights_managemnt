@@ -2,9 +2,22 @@ from rest_framework import serializers
 from .models import *
 
 class UserSerializer(serializers.ModelSerializer):
+
+	def create(self, validated_data):
+		user = User.objects.create_user(**validated_data)
+		return user
+
+	def update(self, instance, validated_data):
+		user = super().update(instance, validated_data)
+		user.set_password(validated_data.get("password"))
+		user.save()
+		return user
+
 	class Meta:
 		model = User
-		fields = "__all__"
+		fields = "id","username", "last_name", "first_name", "groups", "password"
+		extra_kwargs = {'groups': {'read_only': True}}
+		# fields = "__all__"
 
 class CompagnieSerializer(serializers.ModelSerializer):
 	class Meta:
